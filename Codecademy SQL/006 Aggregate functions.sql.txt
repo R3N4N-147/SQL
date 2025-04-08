@@ -1,0 +1,315 @@
+SELECT * FROM fake_apps;
+
+Preview: Docs Returns the number of rows that match the specified criteria.
+COUNT()
+: count the number of rows
+Preview: Docs Returns the sum of all the value in that column.
+SUM()
+: the sum of the values in a column
+Preview: Docs Loading link description
+MAX()
+/
+Preview: Docs Returns the smallest value in a column.
+MIN()
+: the largest/smallest value
+Preview: Docs Loading link description
+AVG()
+: the average of the values in a column
+Preview: Docs Loading link description
+ROUND()
+: round the values in the column
+
+
+*****************************************************
+
+1.
+Let’s count how many apps are in the table.
+
+In the code editor, run:
+
+SELECT COUNT(*) FROM fake_apps;
+
+2.
+Add a WHERE clause in the previous query to count how many free apps are in the table.
+
+SELECT COUNT(*) FROM fake_apps;
+WHERE price = 0.0;
+
+
+***
+
+Preview: Docs Returns the sum of all the value in that column.
+SUM()
+ is a function that takes the name of a column as an argument and returns the sum of all the values in that column.
+
+What is the total number of downloads for all of the apps combined?
+
+
+SELECT SUM(downloads)
+FROM fake_apps;
+
+***
+
+The MAX() and MIN() functions return the highest and lowest values in a column, respectively.
+
+Preview: Docs Loading link description
+MAX()
+ takes the name of a column as an argument and returns the largest value in that column. Here, we returned the largest value in the downloads column.
+
+Preview: Docs Loading link description
+MIN()
+ works the same way but it does the exact opposite; it returns the smallest value.
+
+How many downloads does the most popular app have?
+SELECT MAX(downloads) FROM fake_apps;
+
+1. What is the least number of times an app has been downloaded?
+SELECT MIN(downloads) FROM fake_apps;
+
+
+2 Write a new query that returns the price of the most expensive app.
+SELECT MAX(price) FROM fake_apps;
+
+
+***
+
+1. The AVG() function works by taking a column name as an argument and returns the average value for that column.
+
+SELECT AVG(downloads) FROM fake_apps;
+
+2. Write a new query that calculates the average price for all the apps in the table.
+
+SELECT AVG(price) FROM fake_apps;
+
+***
+
+
+ROUND() function takes two arguments inside the parenthesis:
+a column name
+an integer
+
+In the code editor, type:
+SELECT name, ROUND(price, 0)
+FROM fake_apps;
+
+My improved version:
+SELECT name, price, ROUND(price, 0) AS 'Round' -- Better to visualise
+FROM fake_apps; 
+
+
+
+SELECT AVG(price)
+FROM fake_apps;
+
+SELECT ROUND(AVG(price), 2)
+FROM fake_apps; 
+
+SELECT ROUND(AVG(price), 3)
+FROM fake_apps; 
+
+SELECT ROUND(AVG(price), 4)
+FROM fake_apps; 
+
+
+***
+
+Group By I
+
+
+GROUP BY is a clause in SQL that is used with aggregate functions.
+It is used in collaboration with the SELECT statement to arrange identical data into groups.
+
+The GROUP BY statement comes after any WHERE statements, but before 
+ORDER BY or LIMIT.
+
+1.In the code editor, type:
+
+SELECT price, COUNT(*) 
+FROM fake_apps
+GROUP BY price;
+
+Here, our aggregate function is COUNT() and we arranged price into groups.
+
+What do you expect the result to be?
+
+
+
+
+2. In the previous query, add a WHERE clause to count the total number 
+of apps that have been downloaded more than 20,000 times, at each price.
+
+SELECT price, COUNT(*) 
+FROM fake_apps
+WHERE downloads > 20000
+GROUP BY price;
+
+
+
+
+3.
+Remove the previous query.
+Write a new query that calculates the total number of downloads for each category.
+Select category and SUM(downloads).
+
+
+SELECT category, SUM(downloads) 
+FROM fake_apps
+GROUP BY category;
+
+
+***
+
+Group By II
+
+Sometimes, we want to 
+Preview: Docs Groups a result set based on an aggregate function (COUNT(), MIN(), MAX(), SUM(), AVG()). It lists the number in each group.
+GROUP BY
+ a calculation done on a column.
+
+For instance, we might want to know how many movies have IMDb ratings that round to 1, 2, 3, 4, 5. We could do this using the following syntax:
+
+
+SELECT ROUND(imdb_rating),
+   COUNT(name)
+FROM movies
+GROUP BY ROUND(imdb_rating)
+ORDER BY ROUND(imdb_rating);
+
+
+However, this query may be time-consuming to write and more prone to error.
+
+SQL lets us use column reference(s) in our GROUP BY that will make our lives easier.
+
+1 is the first column selected
+2 is the second column selected
+3 is the third column selected
+and so on.
+
+The following query is equivalent to the one above:
+
+SELECT ROUND(imdb_rating),
+   COUNT(name)
+FROM movies
+GROUP BY 1
+ORDER BY 1;
+
+
+Here, the 1 refers to the first column in our SELECT statement, ROUND(imdb_rating).
+
+
+1. Suppose we have the query below:
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY category, price;
+
+Write the exact query, but use column reference numbers instead of column names after GROUP BY.
+
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY 1
+ORDER BY 1;
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY 1
+ORDER BY 2;
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY 2
+ORDER BY 2;
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY 2
+ORDER BY 1;
+
+
+** * * *
+
+Having
+
+1.
+Suppose we have the query below:
+
+SELECT price, 
+   ROUND(AVG(downloads)),
+   COUNT(*)
+FROM fake_apps
+GROUP BY price;
+
+
+It returns the average downloads (rounded) and the number of apps – at each price point.
+
+However, certain price points don’t have very many apps, so their average downloads are less meaningful.
+
+Add a HAVING clause to restrict the query to price points that have more than 10 apps.
+
+
+SELECT price, 
+   ROUND(AVG(downloads)),
+   COUNT(name)
+FROM fake_apps
+GROUP BY 1
+HAVING COUNT(name) > 10;
+
+
+
+****
+
+Review
+
+Congratulations!
+
+You just learned how to use aggregate functions to perform calculations on your data. What can we generalize so far?
+
+Preview: Docs Returns the number of rows that match the specified criteria.
+COUNT()
+: count the number of rows
+Preview: Docs Returns the sum of all the value in that column.
+SUM()
+: the sum of the values in a column
+Preview: Docs Loading link description
+MAX()
+/
+Preview: Docs Returns the smallest value in a column.
+MIN()
+: the largest/smallest value
+Preview: Docs Loading link description
+AVG()
+: the average of the values in a column
+Preview: Docs Loading link description
+ROUND()
+: round the values in the column
+
+
+Aggregate functions combine multiple rows together to form a single value of more meaningful information.
+
+Preview: Docs Loading link description
+GROUP BY
+ is a clause used with aggregate functions to combine data from one or more columns.
+Preview: Docs Loading link description
+HAVING
+ limit the results of a query based on an aggregate property.
+
+
+
+
+
+
+
+
+
+
