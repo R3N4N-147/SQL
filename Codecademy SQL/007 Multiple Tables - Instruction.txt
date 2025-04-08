@@ -1,0 +1,312 @@
+
+Multiple Tables
+Combining Tables Manually
+
+
+***
+
+
+Combining Tables with SQL
+
+JOIN
+
+SELECT * -- all columns
+FROM orders -- which table
+JOIN customers -- combine orders + customers
+  ON orders.customer_id = customers.customer_id;
+
+
+OR we could use
+
+
+SELECT orders.order_id,
+   customers.customer_name
+FROM orders
+JOIN customers
+  ON orders.customer_id = customers.customer_id;
+
+1.
+Join orders table and subscriptions table and select all columns.
+
+Make sure to join on the subscription_id column.
+
+Checkpoint 2 Passed
+2.
+Don’t remove the previous query.
+
+Add a second query after your first one that only selects rows from the join where description is equal to ‘Fashion Magazine’.
+
+SELECT * -- all columns
+FROM orders
+JOIN subscriptions
+  ON orders.subscription_id = subscriptions.subscription_id;
+
+SELECT * 
+FROM orders
+JOIN subscriptions
+  ON orders.subscription_id = subscriptions.subscription_id
+WHERE subscriptions.description = 'Fashion Magazine';
+
+* * * * *
+
+
+Inner Joins
+
+Let’s revisit how we joined orders and customers. For every possible value of customer_id in orders, there was a corresponding row of customers with the same customer_id.
+
+What if that wasn’t true?
+
+For instance, imagine that our customers table was out of date, and was missing any information on customer 11. 
+If that customer had an order in orders, what would happen when we joined the tables?
+
+When we perform a simple JOIN (often called an inner join) 
+our result only includes rows that match our ON condition.
+
+Consider the following animation, which illustrates an inner join 
+of two tables on table1.c2 = table2.c2
+
+
+The first and last rows have matching values of c2. 
+The middle rows do not match. 
+The final result has all values from the first and last rows but does not include the non-matching middle row.
+
+
+1.
+Suppose we are working for The Codecademy Times, 
+a newspaper with two types of subscriptions:
+
+print newspaper
+online articles
+Some users subscribe to just the newspaper, 
+some subscribe to just the online edition, and some subscribe to both.
+
+There is a newspaper table that contains information about the newspaper subscribers.
+Count the number of subscribers who get a print newspaper using COUNT().
+
+
+2. Don’t remove your previous query.
+
+There is also an online table that contains information about the online subscribers.
+Count the number of subscribers who get an online newspaper using COUNT().
+
+3.Don’t remove your previous queries.
+Join newspaper table and online table on their id columns 
+(the unique ID of the subscriber).
+
+How many rows are in this table?
+
+
+-- Codecademy Times
+
+SELECT COUNT(id) FROM newspaper;
+SELECT COUNT(id) FROM online;
+
+SELECT COUNT(*) AS 'Rows'-- all columns
+FROM newspaper
+JOIN online
+  ON newspaper.id = online.id;
+
+
+****
+
+
+Left Joins
+
+What if we want to combine two tables and keep some of the un-matched rows?
+
+SQL lets us do this through a command called LEFT JOIN.
+A left join will keep all rows from the first table, 
+regardless of whether there is a matching row in the second table.
+
+The middle rows do not match. 
+The final result will keep all rows of the first table but will omit 
+the un-matched row from the second table.
+
+
+
+1. Let’s return to our newspaper and online subscribers.
+
+Suppose we want to know how many users subscribe to the print newspaper, but not to the online.
+
+Start by performing a left join of newspaper table and online table on their id columns and selecting all columns.
+
+
+2. Don’t remove your previous query.
+
+In order to find which users do not subscribe to the online edition, we need to add a WHERE clause.
+
+Add a second query after your first one that adds the following WHERE clause and condition:
+
+WHERE online.id IS NULL
+
+This will select rows where there was no corresponding row from the online table.
+
+
+SELECT * -- select all the columns
+FROM newspaper -- selects table1 (the “left” table)
+LEFT JOIN online -- performs a LEFT JOIN on table2 (the “right” table).
+  ON newspaper.id = online.id;
+
+SELECT * -- select all the columns
+FROM newspaper -- selects table1 (the “left” table)
+LEFT JOIN online -- performs a LEFT JOIN on table2 (the “right” table).
+  ON newspaper.id = online.id
+  WHERE online.id IS NULL;
+
+* * * * *
+
+Primary Key vs Foreign Key
+
+orders, subscriptions, and customers.
+
+Each of these tables has a column that uniquely identifies each row of that table:
+
+order_id for orders
+subscription_id for subscriptions
+customer_id for customers
+
+These special columns are called primary keys.
+
+Let’s reexamine the orders table:
+
+order_id	customer_id	subscription_id		purchase_date
+1			2		3		2017-01-01
+2			2		2		2017-01-01
+3			3		1		2017-01-01
+
+
+Note that customer_id (the primary key for customers) and subscription_id (the primary key for subscriptions) both appear in this.
+When the primary key for one table appears in a different table, it is called a foreign key.
+
+So customer_id is a primary key when it appears in customers, but a foreign key when it appears in orders.
+
+...
+
+1. Suppose Columbia University has two tables in their database:
+
+The classes table contains information on the classes that the school offers. Its primary key is id.
+The students table contains information on all students in the school. 
+Its primary key is id. It contains the foreign key class_id, which corresponds to the primary key of classes.
+
+Perform an inner join of classes and students using the primary and foreign keys described above, and select all the columns.
+
+
+
+SELECT * -- select all the columns
+FROM classes -- selects table1 (the “left” table)
+JOIN students -- performs a LEFT JOIN on table2 (the “right” table).
+  ON classes.id = students.class_id;
+
+
+********************************************************************
+**********************************************************************
+
+
+1.
+Eventually, we’ll use a cross join to help us, but first, let’s try a simpler problem.
+
+Let’s start by counting the number of customers who were subscribed to the newspaper during March.
+
+Use COUNT(*) to count the number of rows and a WHERE clause to restrict to two conditions:
+
+start_month <= 3
+end_month >= 3
+
+
+2.
+Don’t remove the previous query.
+
+The previous query lets us investigate one month at a time. In order to check across all months, we’re going to need to use a cross join.
+
+Our database contains another table called months which contains the numbers between 1 and 12.
+
+Select all columns from the cross join of newspaper and months.
+
+
+
+3.
+Don’t remove your previous queries.
+
+Create a third query where you add a WHERE statement to your cross join to restrict to two conditions:
+
+start_month <= month
+end_month >= month
+This will select all months where a user was subscribed.
+
+
+
+4.
+Don’t remove your previous queries.
+
+Create a final query where you aggregate over each month to count the number of subscribers.
+
+Fill in the blanks in the following query:
+
+SELECT month,
+  COUNT(*)
+FROM ________
+CROSS JOIN ________
+WHERE ________ AND ________
+GROUP BY ________;
+
+
+***
+
+SELECT COUNT(*)
+FROM newspaper
+WHERE start_month <= 3 AND end_month >= 3;
+
+SELECT *
+FROM newspaper
+CROSS JOIN months;
+
+SELECT *
+FROM newspaper
+CROSS JOIN months
+WHERE start_month <= month AND end_month >= month;
+
+SELECT month,
+  COUNT(*)
+FROM newspaper
+CROSS JOIN months
+WHERE start_month <= month AND end_month >= month
+GROUP BY month;
+
+
+*****************
+
+UNION
+
+SELECT *
+FROM newspaper
+UNION
+SELECT *
+FROM online;
+
+
+*****************
+
+With
+
+
+
+WITH previous_query AS (
+   SELECT customer_id,
+   COUNT(subscription_id) AS 'subscriptions'
+FROM orders
+GROUP BY customer_id
+)
+
+SELECT customers.customer_name, 
+   previous_query.subscriptions
+FROM previous_query
+JOIN customers
+  ON previous_query.customer_id = customers.customer_id;
+
+
+
+
+********************************************************************
+
+
+
